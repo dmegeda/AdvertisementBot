@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from routers import ads, users
+from routers import posts
+from routers import users
 
 app = FastAPI(
     title="Ads Bot API",
@@ -8,8 +9,8 @@ app = FastAPI(
 )
 
 app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(ads.router, prefix="/ads", tags=["Ads"])
+app.include_router(posts.router, prefix="/posts", tags=["Posts"])
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to Ads API"}
+    return {"message": "Welcome to Telegram Bot API"}

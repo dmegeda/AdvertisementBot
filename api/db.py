@@ -7,5 +7,5 @@ DB_NAME = os.getenv("DB_NAME", "ads_db")
 client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 
-ads_collection = db.ads
+posts_collection = db.posts
 users_collection = db.users
