@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List
 from datetime import datetime
 
 class Attachment(BaseModel):
@@ -12,11 +12,14 @@ class Comment(BaseModel):
     timestamp: datetime
 
 class Post(BaseModel):
-    id: Optional[str] = Field(alias="_id")
+    id: int = Field(alias="_id")  # Required because "_id" is required in MongoDB
     title: str
     description: str
-    category_id: str
+    category_id: int
     author_id: int
     created_at: datetime
-    attachments: Optional[List[Attachment]] = []
-    comments: Optional[List[Comment]] = []
+    attachments: List[Attachment]
+    comments: List[Comment]
+
+    class Config:
+        allow_population_by_field_name = True
