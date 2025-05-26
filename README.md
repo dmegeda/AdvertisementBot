@@ -35,9 +35,14 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 pip install -r requirements.txt
 ```
 
-### 7. Run the FastAPI server:
+### 7. Go back to root folder:
 ```bash
-python -m uvicorn main:app --reload
+cd ..
+```
+
+### 8. Run the FastAPI server:
+```bash
+python -m uvicorn api.main:app --reload
 ```
 
 ---
