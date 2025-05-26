@@ -1,52 +1,65 @@
-from fastapi import APIRouter, HTTPException
+from datetime import datetime
 from typing import List
-from db import posts_collection, db
-from models.post import Post
+
+from fastapi import APIRouter, HTTPException
+
+from api.db import db, posts_collection
+from api.lib.post import get_next_post_id
+from api.schemas.post import (
+    PostCreateSchema,
+    PostUpdateSchema,
+    PostResponseSchema,
+)
+
 
 router = APIRouter()
 
-def get_next_post_id():
-    counter = db.counters.find_one_and_update(
-        {"_id": "post_id"},
-        {"$inc": {"seq": 1}},
-        upsert=True,
-        return_document=True
-    )
-    return counter["seq"]
 
-@router.post("/", response_model=Post)
-def create_post(post: Post):
-    post_dict = post.dict(by_alias=True, exclude={"id"})
-    post_dict["_id"] = get_next_post_id()
+@router.post("/", response_model=PostResponseSchema)
+def create_post(post: PostCreateSchema):
+    post_dict = post.model_dump(by_alias=True)
+    post_dict["_id"] = get_next_post_id(db)
+    post_dict["created_at"] = datetime.now()
     posts_collection.insert_one(post_dict)
-    return Post(**post_dict)
+    return PostResponseSchema(**post_dict)
 
-@router.get("/", response_model=List[Post])
+
+@router.get("/", response_model=List[PostResponseSchema])
 def list_posts():
     posts = list(posts_collection.find())
-    return [Post(**post) for post in posts]
+    return [PostResponseSchema(**post) for post in posts]
 
-@router.get("/{post_id}", response_model=Post)
+
+@router.get("/{post_id}", response_model=PostResponseSchema)
 def get_post(post_id: int):
     post = posts_collection.find_one({"_id": post_id})
+
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    return Post(**post)
 
-@router.put("/{post_id}", response_model=Post)
-def update_post(post_id: int, updated_post: Post):
-    updated_dict = updated_post.dict(by_alias=True, exclude={"id"})
+    return PostResponseSchema(**post)
+
+
+@router.put("/{post_id}", response_model=PostResponseSchema)
+def update_post(post_id: int, updated_post: PostUpdateSchema):
+    updated_dict = updated_post.model_dump(by_alias=True)
     result = posts_collection.update_one(
         {"_id": post_id},
         {"$set": updated_dict}
     )
+
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Post not found")
-    return Post(**{**updated_dict, "_id": post_id})
+
+    post = posts_collection.find_one({"_id": post_id})
+    return PostResponseSchema(**post)
+
 
 @router.delete("/{post_id}")
 def delete_post(post_id: int):
     result = posts_collection.delete_one({"_id": post_id})
+
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Post not found")
+
     return {"message": f"Post {post_id} deleted successfully"}
