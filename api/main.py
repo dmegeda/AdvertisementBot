@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from routers import posts
-from routers import users
+from routers import posts, users, categories
 
 app = FastAPI(
     title="Ads Bot API",
@@ -10,6 +9,7 @@ app = FastAPI(
 
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(posts.router, prefix="/posts", tags=["Posts"])
+app.include_router(categories.router, prefix="/categories", tags=["Categories"])
 
 @app.get("/")
 def root():

@@ -9,3 +9,4 @@ db = client[DB_NAME]
 
 posts_collection = db.posts
 users_collection = db.users
+categories_collection = db.categories
