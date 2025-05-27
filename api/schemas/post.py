@@ -18,6 +18,8 @@ class PostCreateSchema(BaseModel):
     title: str
     description: str
     category_id: int
+    message_id: str
+    chat_msg_id: str
     author_id: int
     attachments: List[PostAttachment] = Field(default_factory=list)
     comments: List[PostComment] = Field(default_factory=list)
@@ -31,6 +33,8 @@ class PostUpdateSchema(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     category_id: Optional[int] = None
+    message_id: str
+    chat_msg_id: str
     attachments: Optional[List[PostAttachment]] = None
     comments: Optional[List[PostComment]] = None
 
@@ -44,6 +48,8 @@ class PostResponseSchema(BaseModel):
     title: str
     description: str
     category_id: int
+    message_id: str
+    chat_msg_id: str
     author_id: int
     created_at: datetime
     attachments: List[PostAttachment]
