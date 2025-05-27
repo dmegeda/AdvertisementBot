@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from api.db import categories_collection, db
-from api.lib.category import get_next_category_id
-from api.schemas.category import (
+from db import categories_collection, db
+from lib.category import get_next_category_id
+from schemas.category import (
     CategoryCreateSchema,
     CategoryUpdateSchema,
     CategoryResponseSchema,

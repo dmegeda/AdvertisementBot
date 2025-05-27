@@ -1,14 +1,17 @@
 const axios = require("axios");
 
+const API_URL = process.env.API_URL ?? "http://127.0.0.1";
+const API_PORT = process.env.API_PORT ?? "8000";
+
 const createPost = async (post, author_id) => {
   const { title, description, category, message_id } = post;
 
   try {
     const {
       data: { _id: category_id },
-    } = await axios.get(`http://127.0.0.1:8000/categories/name/${category}`);
+    } = await axios.get(`${API_URL}:${API_PORT}/categories/name/${category}`);
 
-    await axios.post("http://127.0.0.1:8000/posts/", {
+    await axios.post(`${API_URL}:${API_PORT}/posts/`, {
       _id: "1",
       title,
       description,
@@ -27,16 +30,16 @@ const deletePost = async (message_id, user_id) => {
   try {
     const {
       data: { author_id },
-    } = await axios.get(`http://127.0.0.1:8000/posts/${message_id}`);
+    } = await axios.get(`${API_URL}:${API_PORT}/posts/${message_id}`);
 
     const {
       data: { role },
-    } = await axios.get(`http://127.0.0.1:8000/users/${user_id}`);
+    } = await axios.get(`${API_URL}:${API_PORT}/users/${user_id}`);
 
     if (user_id !== author_id && role !== "admin")
       throw new Error("User cannot delete this post");
 
-    await axios.delete(`http://127.0.0.1:8000/posts/${message_id}`);
+    await axios.delete(`${API_URL}:${API_PORT}/posts/${message_id}`);
   } catch (err) {
     console.error(err);
     throw new Error("User cannot delete this post");
@@ -46,7 +49,7 @@ const deletePost = async (message_id, user_id) => {
 const getPostByChatMsgId = async (message_id) => {
   try {
     const { data: post } = await axios.get(
-      `http://127.0.0.1:8000/posts/thread/${message_id}`,
+      `${API_URL}:${API_PORT}/posts/thread/${message_id}`,
     );
     return post;
   } catch (error) {
@@ -56,7 +59,7 @@ const getPostByChatMsgId = async (message_id) => {
 
 const createUser = async (user) => {
   try {
-    await axios.post("http://127.0.0.1:8000/users/", user);
+    await axios.post(`${API_URL}:${API_PORT}/users/`, user);
   } catch (err) {
     console.log("error");
   }
@@ -65,7 +68,7 @@ const createUser = async (user) => {
 const getUser = async (telegram_id) => {
   try {
     const { data: user } = await axios.get(
-      `http://127.0.0.1:8000/users/${telegram_id}`,
+      `${API_URL}:${API_PORT}/users/${telegram_id}`,
     );
     return user;
   } catch (err) {}
@@ -74,12 +77,12 @@ const getUser = async (telegram_id) => {
 const toggleUserAdmin = async (telegram_id) => {
   try {
     const { data: user } = await axios.get(
-      `http://127.0.0.1:8000/users/${telegram_id}`,
+      `${API_URL}:${API_PORT}/users/${telegram_id}`,
     );
 
     const role = user.role === "admin" ? "user" : "admin";
 
-    await axios.put(`http://127.0.0.1:8000/users/${telegram_id}`, {
+    await axios.put(`${API_URL}:${API_PORT}/users/${telegram_id}`, {
       ...user,
       role,
     });
@@ -90,13 +93,13 @@ const toggleUserAdmin = async (telegram_id) => {
 const createCategory = async (category) => {
   category = { ...category, _id: 1 };
   try {
-    await axios.post("http://127.0.0.1:8000/categories/", category);
+    await axios.post(`${API_URL}:${API_PORT}/categories/`, category);
   } catch (err) {}
 };
 
 const deleteCategory = async (name) => {
   try {
-    await axios.delete(`http://127.0.0.1:8000/categories/${name}`);
+    await axios.delete(`${API_URL}:${API_PORT}/categories/${name}`);
   } catch (err) {
     console.error(err);
     throw new Error("User cannot delete this category");
@@ -106,10 +109,10 @@ const deleteCategory = async (name) => {
 const updatePostWithAttachment = async (message_id, file) => {
   try {
     const { data: post } = await axios.get(
-      `http://127.0.0.1:8000/posts/${message_id}`,
+      `${API_URL}:${API_PORT}/posts/${message_id}`,
     );
 
-    await axios.put(`http://127.0.0.1:8000/posts/${message_id}`, {
+    await axios.put(`${API_URL}:${API_PORT}/posts/${message_id}`, {
       ...post,
       attachments: [...post.attachments, { ...file }],
     });
@@ -121,10 +124,10 @@ const updatePostWithAttachment = async (message_id, file) => {
 const updatePostWithChatMsgId = async (message_id, chat_msg_id) => {
   try {
     const { data: post } = await axios.get(
-      `http://127.0.0.1:8000/posts/${message_id}`,
+      `${API_URL}:${API_PORT}/posts/${message_id}`,
     );
 
-    await axios.put(`http://127.0.0.1:8000/posts/${message_id}`, {
+    await axios.put(`${API_URL}:${API_PORT}/posts/${message_id}`, {
       ...post,
       chat_msg_id: chat_msg_id.toString(),
     });
@@ -136,11 +139,11 @@ const updatePostWithChatMsgId = async (message_id, chat_msg_id) => {
 const updatePostWithComment = async (message_id, comment) => {
   try {
     const { data: post } = await axios.get(
-      `http://127.0.0.1:8000/posts/thread/${message_id}`,
+      `${API_URL}:${API_PORT}/posts/thread/${message_id}`,
     );
     console.log(post);
 
-    await axios.put(`http://127.0.0.1:8000/posts/${post.message_id}`, {
+    await axios.put(`${API_URL}:${API_PORT}/posts/${post.message_id}`, {
       ...post,
 
       comments: [
@@ -156,7 +159,7 @@ const updatePostWithComment = async (message_id, comment) => {
 const getLastPostFromUser = async (author_id) => {
   try {
     const { data: post } = await axios.get(
-      `http://127.0.0.1:8000/posts/last/${author_id}`,
+      `${API_URL}:${API_PORT}/posts/last/${author_id}`,
     );
 
     return post;
@@ -168,7 +171,7 @@ const getLastPostFromUser = async (author_id) => {
 const getUserPosts = async (author_id) => {
   try {
     const { data: posts } = await axios.get(
-      `http://127.0.0.1:8000/posts/author/${author_id}`,
+      `${API_URL}:${API_PORT}/posts/author/${author_id}`,
     );
 
     return posts;
@@ -180,7 +183,7 @@ const getUserPosts = async (author_id) => {
 const getCategories = async () => {
   try {
     const { data: categories } = await axios.get(
-      "http://127.0.0.1:8000/categories",
+      `${API_URL}:${API_PORT}/categories`,
     );
     return categories;
   } catch (err) {

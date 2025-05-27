@@ -4,9 +4,9 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from pymongo import DESCENDING
 
-from api.db import db, posts_collection
-from api.lib.post import get_next_post_id
-from api.schemas.post import (
+from db import db, posts_collection
+from lib.post import get_next_post_id
+from schemas.post import (
     PostCreateSchema,
     PostUpdateSchema,
     PostResponseSchema,

@@ -3,10 +3,10 @@ from typing import List
 from fastapi import APIRouter
 from fastapi import HTTPException
 
-from api.db import db, users_collection
-from api.lib.user import get_next_user_id
+from db import db, users_collection
+from lib.user import get_next_user_id
 
-from api.schemas.user import (
+from schemas.user import (
     UserCreateSchema,
     UserUpdateSchema,
     UserResponseSchema,
