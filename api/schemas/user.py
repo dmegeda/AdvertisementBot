@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from api.models.user import UserRole
+from models.user import UserRole
 
 
 class UserCreateSchema(BaseModel):

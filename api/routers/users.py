@@ -3,10 +3,10 @@ from typing import List
 from fastapi import APIRouter
 from fastapi import HTTPException
 
-from api.db import db, users_collection
-from api.lib.user import get_next_user_id
+from db import db, users_collection
+from lib.user import get_next_user_id
 
-from api.schemas.user import (
+from schemas.user import (
     UserCreateSchema,
     UserUpdateSchema,
     UserResponseSchema,
@@ -23,9 +23,9 @@ def create_user(user: UserCreateSchema):
     return UserResponseSchema(**user_dict)
 
 
-@router.get('/{user_id}', response_model=UserResponseSchema)
-def get_user(user_id: int):
-    user = users_collection.find_one({'_id': user_id})
+@router.get('/{contact}', response_model=UserResponseSchema)
+def get_user(contact: str):
+    user = users_collection.find_one({'contact': contact})
 
     if not user:
         raise HTTPException(status_code=404, detail='User not found')
@@ -39,21 +39,21 @@ def list_users():
     return [UserResponseSchema(**user) for user in users]
 
 
-@router.put('/{user_id}', response_model=UserResponseSchema)
-def update_user(user_id: int, updated_user: UserUpdateSchema):
+@router.put('/{contact}', response_model=UserResponseSchema)
+def update_user(contact: str, updated_user: UserUpdateSchema):
     update_data = updated_user.model_dump(
         by_alias=True,
         exclude_unset=True,
     )
     result = users_collection.update_one(
-        filter={'_id': user_id},
+        filter={'contact': contact},
         update={'$set': update_data}
     )
 
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail='User not found')
 
-    user = users_collection.find_one({'_id': user_id})
+    user = users_collection.find_one({'contact': contact})
     return UserResponseSchema(**user)
 
 

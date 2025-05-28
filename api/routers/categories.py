@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from api.db import categories_collection, db
-from api.lib.category import get_next_category_id
-from api.schemas.category import (
+from db import categories_collection, db
+from lib.category import get_next_category_id
+from schemas.category import (
     CategoryCreateSchema,
     CategoryUpdateSchema,
     CategoryResponseSchema,
@@ -21,9 +21,9 @@ def create_category(category: CategoryCreateSchema):
     return CategoryResponseSchema(**category_dict)
 
 
-@router.get("/{category_id}", response_model=CategoryResponseSchema)
-def get_category(category_id: int):
-    category = categories_collection.find_one({"_id": category_id})
+@router.get("/name/{name}", response_model=CategoryResponseSchema)
+def get_category(name: str):
+    category = categories_collection.find_one({"name": name})
 
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
@@ -52,11 +52,11 @@ def update_category(category_id: int, updated_category: CategoryUpdateSchema):
     return CategoryResponseSchema(**category)
 
 
-@router.delete("/{category_id}")
-def delete_category(category_id: int):
-    result = categories_collection.delete_one({"_id": category_id})
+@router.delete("/{name}")
+def delete_category(name: str):
+    result = categories_collection.delete_one({"name": name})
 
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Category not found")
 
-    return {"message": f"Category {category_id} deleted successfully"}
+    return {"message": f"Category {name} deleted successfully"}

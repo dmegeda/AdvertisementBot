@@ -47,6 +47,32 @@ python -m uvicorn api.main:app --reload
 
 ---
 
+## How to Launch the Bot
+
+Make sure you have [Node.js](https://nodejs.org/en/download/current) installed.
+
+### 1. Clone or download the project
+Unzip the archive or clone the repository.
+
+### 2. Open terminal and navigate to the project folder:
+```bash
+cd bot
+```
+
+### 3. Create the configuration file .env as shown in the [example](https://github.com/dmegeda/AdvertisementBot/blob/bot/bot/.env-example).
+
+### 4. Install required dependencies:
+```bash
+npm i
+```
+
+### 5. Run the bot server:
+```bash
+npm start
+```
+
+---
+
 ## API Documentation
 
 Once the server is running, visit:
@@ -55,3 +81,11 @@ Once the server is running, visit:
 - ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ---
+
+
+## Docker compose running
+Insert bot api token into the bot service in docker compose, then run it with
+
+```bash
+docker compose up
+```

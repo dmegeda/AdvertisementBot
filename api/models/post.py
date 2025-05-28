@@ -20,6 +20,8 @@ class Post(BaseModel):
     title: str
     description: str
     category_id: int
+    message_id: str
+    chat_msg_id: str
     author_id: int
     created_at: datetime
     attachments: List[Attachment]
