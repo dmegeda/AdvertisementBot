@@ -81,3 +81,11 @@ Once the server is running, visit:
 - ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ---
+
+
+## Docker compose running
+Insert bot api token into the bot service in docker compose, then run it with
+
+```bash
+docker compose up
+```

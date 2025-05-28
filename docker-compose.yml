@@ -30,7 +30,7 @@ services:
       context: ./bot
       dockerfile: Dockerfile
     environment:
-      - BOT_API_KEY=777000
+      - BOT_API_KEY=<REPLACE_WITH_BOT_API_KEY>
       - API_URL=http://api
       - API_PORT=8080
 
